@@ -1,5 +1,6 @@
-from typing import Optional
 from fastapi import APIRouter, Query, Body
+
+from dependencies import PaginationDep
 from schemas.hotels import Hotel, HotelPATCH
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
@@ -18,24 +19,25 @@ hotels = [
 
 @router.get("/")
 def get_hotels(
-        id: Optional[int] = Query(None, description="Айдишник"),
-        title: Optional[str] = Query(None, description="Название отеля"),
-        page: Optional[int] = Query(1, description="Страница"),
-        per_page: Optional[int] = Query(2, description="Количество записей на странице")
+        pagination: PaginationDep,
+        id: int | None = Query(None, description="Айдишник"),
+        title: str | None = Query(None, description="Название отеля"),
 
 ):
     hotels_ = []
     for hotel in hotels:
-        if id and hotel["id"] != id:
+        if id is not None and hotel["id"] != id:
             continue
-        elif title and hotel["title"] != title:
+        elif title is not None and hotel["title"] != title:
             continue
         else:
             hotels_.append(hotel)
-        start = (page - 1) * per_page
-        end = start + per_page
+    if pagination.page and pagination.per_page:
+        start = (pagination.page - 1) * pagination.per_page
+        end = start + pagination.per_page
         paginated_hotels = hotels_[start:end]
         return paginated_hotels
+    return hotels_
 
 
 @router.post("/")
@@ -69,7 +71,11 @@ def update_hotels(hotel_id: int, hotel_data: Hotel):
     return {"status": 200}
 
 
-@router.patch("/{hotel_id}")
+@router.patch(
+    "/{hotel_id}",
+    summary="Частичное обновление",
+    description="<h1> Здесь можно частично обновлять данные. Можно обновить title, можно обновить name. А можно всё сразу. </h1>"
+)
 def patch_hotels(hotel_id: int, hotel_data: HotelPATCH):
     global hotels
     for hotel in hotels:

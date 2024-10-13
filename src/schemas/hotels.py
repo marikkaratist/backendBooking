@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 
@@ -9,5 +7,5 @@ class Hotel(BaseModel):
 
 
 class HotelPATCH(BaseModel):
-    title: Optional[str] = Field(None)
-    name: Optional[str] = Field(None)
+    title: str | None = Field(None)
+    name: str | None = Field(None)
