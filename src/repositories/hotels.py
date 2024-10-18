@@ -26,12 +26,3 @@ class HotelsRepository(BaseRepository):
         )
         result = await self.session.execute(query)
         return result.scalars().all()
-
-    async def add(self, location, title):
-        add_hotel_stmt = insert(self.model).values({
-            "location": location,
-            "title": title
-        })
-        result = await self.session.execute(add_hotel_stmt)
-        await self.session.commit()
-        return result
