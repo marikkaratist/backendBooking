@@ -26,14 +26,14 @@ class BaseRepository:
 
         return result.scalars().one()
 
-    async def edit(self, id: int, **filter_by):
-        edit_data_stmt = update(self.model).filter(self.model.id == id).values(**filter_by)
-        result = await self.session.execute(edit_data_stmt)
+    async def edit(self, data: BaseModel, exclude_unset: bool = False, **filter_by) -> None:
+        edit_data_stmt = (
+            update(self.model)
+            .filter_by(**filter_by)
+            .values(**data.model_dump(exclude_unset=exclude_unset))
+        )
+        await self.session.execute(edit_data_stmt)
 
-        return result
-
-    async def delete(self, id: int):
-        delete_data_stmt = delete(self.model).filter(self.model.id == id)
-        result = await self.session.execute(delete_data_stmt)
-
-        return result
+    async def delete(self, **filter_by) -> None:
+        delete_data_stmt = delete(self.model).filter_by(**filter_by)
+        await self.session.execute(delete_data_stmt)
