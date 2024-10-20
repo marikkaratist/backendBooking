@@ -33,14 +33,18 @@ async def get_hotel(hotel_id: int):
 
 @router.post("/")
 async def create_hotels(hotel_data: HotelAdd = Body(openapi_examples={
-    "1": {"summary": "Сочи", "value": {
+    "1": {
+        "summary": "Сочи", "value": {
         "title": "Deluxe Cloud",
         "location": "Сочи, ул.Моря 3"
-    }},
-    "2": {"summary": "Дубай", "value": {
+        }
+    },
+    "2": {
+        "summary": "Дубай", "value": {
         "title": "Luxury",
         "location": "Дубай, ул. Шейха 8"
-    }},
+        }
+    },
 })
 ):
     async with async_session_maker() as session:
