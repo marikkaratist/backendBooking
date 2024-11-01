@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Body, HTTPException, Response
-from starlette.responses import RedirectResponse
 
 from src.api.dependencies import UserIdDep
 from src.database import async_session_maker
@@ -53,7 +52,7 @@ async def login_user(data: UserRequestAdd, response: Response):
         return {"access_token": access_token}
 
 
-@router.get("/logout")
+@router.post("/logout")
 async def logout(response: Response):
     response.delete_cookie("access_token")
     return {"status": "OK"}
