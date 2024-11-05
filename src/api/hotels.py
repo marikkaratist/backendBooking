@@ -3,7 +3,7 @@ from fastapi import APIRouter, Query, Body
 from src.api.dependencies import PaginationDep
 from src.database import async_session_maker, engine
 from src.repositories.hotels import HotelsRepository
-from src.schemas.hotels import HotelPATCH, HotelAdd
+from src.schemas.hotels import HotelPatch, HotelAdd
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
@@ -66,7 +66,7 @@ async def update_hotels(hotel_id: int, hotel_data: HotelAdd):
     summary="Частичное обновление",
     description="<h1> Здесь можно частично обновлять данные. Можно обновить title, можно обновить name. А можно всё сразу. </h1>"
 )
-async def patch_hotels(hotel_id: int, hotel_data: HotelPATCH):
+async def patch_hotels(hotel_id: int, hotel_data: HotelPatch):
     async with async_session_maker() as session:
         await HotelsRepository(session).edit(hotel_data, exclude_unset=True, id=hotel_id)
         await session.commit()
