@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Body
+from datetime import date
+from fastapi import APIRouter, Body, Query
 
 from src.api.dependencies import DBDep
 from src.schemas.rooms import RoomAdd, RoomPatch, RoomAddRequest, RoomPatchRequest
@@ -7,8 +8,13 @@ router = APIRouter(prefix="/hotels", tags=["Номера"])
 
 
 @router.get("/{hotel_id}/rooms")
-async def get_rooms(hotel_id: int, db: DBDep):
-    return await db.rooms.get_filtered(hotel_id=hotel_id)
+async def get_rooms(
+        hotel_id: int,
+        db: DBDep,
+        date_from: date = Query(example="2023-12-10"),
+        date_to: date = Query(example="2023-12-15")
+):
+    return await db.rooms.get_filtered_by_time(hotel_id=hotel_id, date_from=date_from, date_to=date_to)
 
 
 @router.get("/{hotel_id}/rooms/{room_id}")
@@ -20,7 +26,6 @@ async def get_room(hotel_id: int, room_id: int, db: DBDep):
 async def create_room(hotel_id: int, db: DBDep, room_data: RoomAddRequest = Body(openapi_examples={
     "1": {
         "summary": "Basic", "value": {
-            "hotel_id": "1",
             "title": "Basic room",
             "description": "Очень комфортный уютный номер с одним санузлом",
             "price": 500,
@@ -29,7 +34,6 @@ async def create_room(hotel_id: int, db: DBDep, room_data: RoomAddRequest = Body
     },
     "2": {
         "summary": "Deluxe", "value": {
-            "hotel_id": "2",
             "title": "Deluxe room",
             "description": "Супер комфортный роскошный номер с двумя санузлами",
             "price": 1500,
