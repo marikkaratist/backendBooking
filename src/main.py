@@ -18,8 +18,9 @@ app = FastAPI()
 app.include_router(router_auth)
 app.include_router(router_hotels)
 app.include_router(router_rooms)
-app.include_router(router_bookings)
 app.include_router(router_facilities)
+app.include_router(router_bookings)
+
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
