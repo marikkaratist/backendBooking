@@ -62,7 +62,8 @@ async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomAdd
             "title": "Basic room",
             "description": "Лайтовый номер по скидке",
             "price": 250,
-            "quantity": 3
+            "quantity": 3,
+            "facilities_ids": []
         }
     },
     "2": {
@@ -71,21 +72,26 @@ async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomAdd
             "title": "Deluxe room",
             "description": "Достаточно дороговатый номер по сравнению даже с дорогими номерами",
             "price": 2500,
-            "quantity": 6
+            "quantity": 6,
+            "facilities_ids": []
         }
     }
 })
 ):
     _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dump())
     await db.rooms.edit(_room_data, id=room_id)
+    await db.rooms_facilities.set_room_facilities(room_id, facilies_ids=room_data.facilities_ids)
     await db.commit()
     return {"status": 204}
 
 
 @router.patch("/{hotel_id}/rooms/{room_id}")
 async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomPatchRequest):
-    _room_data = RoomPatch(hotel_id=hotel_id, **room_data.model_dump(exclude_unset=True))
+    _room_data_dict = room_data.model_dump(exclude_unset=True)
+    _room_data = RoomPatch(hotel_id=hotel_id, **_room_data_dict)
     await db.rooms.edit(_room_data, exclude_unset=True, id=room_id)
+    if "facilities_ids" in _room_data_dict:
+        await db.rooms_facilities.set_room_facilities(room_id, facilities_ids=_room_data_dict["facilities_ids"])
     await db.commit()
     return {"status": 204}
 
