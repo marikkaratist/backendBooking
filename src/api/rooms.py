@@ -58,7 +58,6 @@ async def create_room(hotel_id: int, db: DBDep, room_data: RoomAddRequest = Body
 async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomAddRequest = Body(openapi_examples={
     "1": {
         "summary": "Basic", "value": {
-            "hotel_id": "1",
             "title": "Basic room",
             "description": "Лайтовый номер по скидке",
             "price": 250,
@@ -68,7 +67,6 @@ async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomAdd
     },
     "2": {
         "summary": "Deluxe", "value": {
-            "hotel_id": "2",
             "title": "Deluxe room",
             "description": "Достаточно дороговатый номер по сравнению даже с дорогими номерами",
             "price": 2500,
@@ -80,7 +78,7 @@ async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomAdd
 ):
     _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dump())
     await db.rooms.edit(_room_data, id=room_id)
-    await db.rooms_facilities.set_room_facilities(room_id, facilies_ids=room_data.facilities_ids)
+    await db.rooms_facilities.set_room_facilities(room_id, facilities_ids=room_data.facilities_ids)
     await db.commit()
     return {"status": 204}
 
