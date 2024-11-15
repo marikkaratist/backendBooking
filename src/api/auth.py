@@ -33,7 +33,21 @@ async def register(db: DBDep, data: UserRequestAdd = Body(openapi_examples={
 
 
 @router.post("/login")
-async def login_user(data: UserRequestAdd, response: Response, db: DBDep):
+async def login_user(response: Response, db: DBDep, data: UserRequestAdd = Body(openapi_examples={
+    "1": {
+            "summary": "Admin", "value": {
+                "email": "admin_example@mgmail.com",
+                "password": "PasSsw0rD"
+            }
+        },
+        "2": {
+            "summary": "User", "value": {
+                "email": "user_example@mgmail.com",
+                "password": "91sdjer99"
+            }
+        }
+})
+):
     user = await db.users.get_user_with_hashed_password(email=data.email)
 
     if user is None:
