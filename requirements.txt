@@ -36,6 +36,7 @@ packaging==24.1
 passlib==1.7.4
 pathspec==0.12.1
 pendulum==3.0.0
+pillow==11.0.0
 platformdirs==4.3.6
 prompt_toolkit==3.0.48
 pydantic==2.8.2

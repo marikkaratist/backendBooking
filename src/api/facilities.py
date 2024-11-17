@@ -8,13 +8,13 @@ from src.tasks.tasks import test_task
 router = APIRouter(prefix="/facilities", tags=["Удобства"])
 
 
-@router.get("/")
+@router.get("")
 @cache(expire=10)
 async def get_facilities(db: DBDep):
     return await db.facilities.get_all()
 
 
-@router.post("/")
+@router.post("")
 async def add_facility(db: DBDep, facility_data: FacilityAdd = Body(openapi_examples={
     "1": {
         "summary": "Интернет", "value": {

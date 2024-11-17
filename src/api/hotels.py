@@ -8,7 +8,7 @@ from src.schemas.hotels import HotelPatch, HotelAdd
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
 
-@router.get("/")
+@router.get("")
 @cache(expire=10)
 async def get_hotels(
         pagination: PaginationDep,
@@ -36,7 +36,7 @@ async def get_hotel(hotel_id: int, db: DBDep):
     return await db.hotels.get_one_or_none(id=hotel_id)
 
 
-@router.post("/")
+@router.post("")
 async def create_hotels(db: DBDep, hotel_data: HotelAdd = Body(openapi_examples={
     "1": {
         "summary": "Сочи", "value": {
