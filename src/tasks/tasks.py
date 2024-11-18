@@ -3,8 +3,6 @@ from time import sleep
 from PIL import Image
 import os
 
-from jinja2.nodes import Getattr
-
 from src.database import async_session_maker_null_pool
 from src.tasks.celery_app import celery_instance
 from src.utils.db_manager import DBManager
