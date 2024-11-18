@@ -9,3 +9,11 @@ celery_instance = Celery(
         "src.tasks.tasks"
     ]
 )
+
+
+celery_instance.conf.beat_schedule = {
+    "luboe-nazvanie": {
+        "task": "booking_today_checkin",
+        "schedule": 5,
+    }
+}
