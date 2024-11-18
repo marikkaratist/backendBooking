@@ -31,11 +31,11 @@ def get_current_user_id(token: str = Depends(get_token)) -> int:
 UserIdDep = Annotated[int, Depends(get_current_user_id)]
 
 def get_db_manager():
-    return DBManager(session_factory=async_session_maker)
+    return
 
 
 async def get_db():
-    async with get_db_manager() as db:
+    async with DBManager(session_factory=async_session_maker) as db:
         yield db
 
 
