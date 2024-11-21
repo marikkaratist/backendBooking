@@ -1,15 +1,14 @@
 import json
-import os
-
 import pytest
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
-from src.database import Base, engine_null_pool
+from src.database import Base, engine_null_pool, async_session_maker_null_pool
 from src.main import app
 from src.models import *
-from src.models.hotels import HotelsORM
+from src.schemas.hotels import HotelAdd
+from src.schemas.rooms import RoomAdd
+from src.utils.db_manager import DBManager
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -23,20 +22,19 @@ async def setup_database(check_test_mode):
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    async with AsyncSession(engine_null_pool) as session:
-        with open(os.path.join("tests", "mock_hotels.json"), "r") as file:
-            data = json.load(file)
+    with open("tests/mock_hotels.json", encoding="utf-8") as file_hotels:
+        hotels = json.load(file_hotels)
 
-        hotels = [HotelsORM(**hotel) for hotel in data]
-        session.add_all(hotels)
-        await session.commit()
+    with open("tests/mock_rooms.json", encoding="utf-8") as file_rooms:
+        rooms = json.load(file_rooms)
 
-        with open(os.path.join("tests", "mock_rooms.json"), "r") as file:
-            data = json.load(file)
+    hotels = [HotelAdd.model_validate(hotel) for hotel in hotels]
+    rooms = [RoomAdd.model_validate(room) for room in rooms]
 
-        rooms = [RoomsORM(**room) for room in data]
-        session.add_all(rooms)
-        await session.commit()
+    async with DBManager(session_factory=async_session_maker_null_pool) as db:
+        await db.hotels.add_bulk(hotels)
+        await db.rooms.add_bulk(rooms)
+        await db.commit()
 
 
 @pytest.fixture(scope="session", autouse=True)
