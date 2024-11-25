@@ -3,6 +3,8 @@ import pytest
 from httpx import AsyncClient
 from unittest import mock
 
+from sqlalchemy import True_
+
 mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
 
 from src.api.dependencies import get_db
@@ -70,3 +72,15 @@ async def register_user(setup_database, ac):
             "password": "12345"
         }
     )
+
+@pytest.fixture(scope="session")
+async def authenticated_ac(register_user, ac):
+    await ac.post(
+        "/auth/register",
+        json={
+            "email": "kot@pes.com",
+            "password": "12345"
+        }
+    )
+    assert ac.cookies["access_token"]
+    yield ac
