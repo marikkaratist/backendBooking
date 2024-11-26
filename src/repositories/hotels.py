@@ -6,7 +6,7 @@ from src.models.hotels import HotelsORM
 from src.models.rooms import RoomsORM
 from src.repositories.base import BaseRepository
 from src.repositories.mappers.mappers import HotelDataMapper
-from src.repositories.utils import rooms_ids_from_booking
+from src.repositories.utils import rooms_ids_for_booking
 from src.schemas.hotels import Hotel
 
 
@@ -23,7 +23,7 @@ class HotelsRepository(BaseRepository):
             limit,
             offset
     ) -> list[Hotel]:
-        rooms_ids_to_get = rooms_ids_from_booking(date_from=date_from, date_to=date_to)
+        rooms_ids_to_get = rooms_ids_for_booking(date_from=date_from, date_to=date_to)
         hotels_ids_to_get = (
             select(RoomsORM.hotel_id)
             .select_from(RoomsORM)

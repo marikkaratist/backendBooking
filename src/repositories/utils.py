@@ -7,7 +7,7 @@ from src.models.rooms import RoomsORM
 
 
 
-def rooms_ids_from_booking(
+def rooms_ids_for_booking(
             date_from: date,
             date_to: date,
             hotel_id: int | None = None

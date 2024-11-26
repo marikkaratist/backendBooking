@@ -6,7 +6,7 @@ from sqlalchemy.orm import selectinload
 from src.models.rooms import RoomsORM
 from src.repositories.base import BaseRepository
 from src.repositories.mappers.mappers import RoomDataWithRelsMapper, RoomDataMapper
-from src.repositories.utils import rooms_ids_from_booking
+from src.repositories.utils import rooms_ids_for_booking
 
 
 class RoomsRepository(BaseRepository):
@@ -19,7 +19,7 @@ class RoomsRepository(BaseRepository):
             date_from: date,
             date_to: date
     ):
-        rooms_ids_to_get = rooms_ids_from_booking(date_from, date_to, hotel_id)
+        rooms_ids_to_get = rooms_ids_for_booking(date_from, date_to, hotel_id)
 
         query = (
             select(self.model)
