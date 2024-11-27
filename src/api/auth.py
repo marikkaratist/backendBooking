@@ -23,13 +23,15 @@ async def register(db: DBDep, data: UserRequestAdd = Body(openapi_examples={
     }
 })
 ):
-    hashed_password = AuthService().hash_password(data.password)
-    new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
+    try:
+        hashed_password = AuthService().hash_password(data.password)
+        new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
+        await db.users.add(new_user_data)
+        await db.commit()
+    except:
+        raise HTTPException(status_code=400)
 
-    await db.users.add(new_user_data)
-    await db.commit()
-
-    return {"status": 201}
+    return {"status": 200}
 
 
 @router.post("/login")
