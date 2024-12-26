@@ -12,28 +12,29 @@ router = APIRouter(prefix="/bookings", tags=["Бронирования"])
 async def get_bookings(db: DBDep):
     return await db.bookings.get_all()
 
+
 @router.get("/me")
 @cache(expire=10)
 async def get_me(db: DBDep, user_id: UserIdDep):
     return await db.bookings.get_filtered(user_id=user_id)
 
+
 @router.post("")
-async def create_booking(user_id: UserIdDep, db: DBDep, booking_data: BookingAddRequest = Body(openapi_examples={
-    "1": {
-        "summary": "Бронирование №1", "value": {
-            "room_id": 1,
-            "date_from": "2023-12-10",
-            "date_to": "2023-12-15"
+async def create_booking(
+    user_id: UserIdDep,
+    db: DBDep,
+    booking_data: BookingAddRequest = Body(
+        openapi_examples={
+            "1": {
+                "summary": "Бронирование №1",
+                "value": {"room_id": 1, "date_from": "2023-12-10", "date_to": "2023-12-15"},
+            },
+            "2": {
+                "summary": "Бронирование №2",
+                "value": {"room_id": 2, "date_from": "2023-12-22", "date_to": "2023-12-28"},
+            },
         }
-    },
-    "2": {
-        "summary": "Бронирование №2", "value": {
-            "room_id": 2,
-            "date_from": "2023-12-22",
-            "date_to": "2023-12-28"
-        }
-    }
-})
+    ),
 ):
     room = await db.rooms.get_one_or_none(id=booking_data.room_id)
     hotel = await db.hotels.get_one_or_none(id=room.hotel_id)

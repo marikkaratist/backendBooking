@@ -8,47 +8,48 @@ router = APIRouter(prefix="/auth", tags=["Авторизация и аунтен
 
 
 @router.post("/register")
-async def register(db: DBDep, data: UserRequestAdd = Body(openapi_examples={
-    "1": {
-        "summary": "Admin", "value": {
-            "email": "admin_example@mgmail.com",
-            "password": "PasSsw0rD"
+async def register(
+    db: DBDep,
+    data: UserRequestAdd = Body(
+        openapi_examples={
+            "1": {
+                "summary": "Admin",
+                "value": {"email": "admin_example@mgmail.com", "password": "PasSsw0rD"},
+            },
+            "2": {
+                "summary": "User",
+                "value": {"email": "user_example@mgmail.com", "password": "91sdjer99"},
+            },
         }
-    },
-    "2": {
-        "summary": "User", "value": {
-            "email": "user_example@mgmail.com",
-            "password": "91sdjer99"
-        }
-    }
-})
+    ),
 ):
     try:
         hashed_password = AuthService().hash_password(data.password)
         new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
         await db.users.add(new_user_data)
         await db.commit()
-    except: # noqa: E722
+    except:  # noqa: E722
         raise HTTPException(status_code=400)
 
     return {"status": 200}
 
 
 @router.post("/login")
-async def login_user(response: Response, db: DBDep, data: UserRequestAdd = Body(openapi_examples={
-    "1": {
-            "summary": "Admin", "value": {
-                "email": "admin_example@mgmail.com",
-                "password": "PasSsw0rD"
-            }
-        },
-        "2": {
-            "summary": "User", "value": {
-                "email": "user_example@mgmail.com",
-                "password": "91sdjer99"
-            }
+async def login_user(
+    response: Response,
+    db: DBDep,
+    data: UserRequestAdd = Body(
+        openapi_examples={
+            "1": {
+                "summary": "Admin",
+                "value": {"email": "admin_example@mgmail.com", "password": "PasSsw0rD"},
+            },
+            "2": {
+                "summary": "User",
+                "value": {"email": "user_example@mgmail.com", "password": "91sdjer99"},
+            },
         }
-})
+    ),
 ):
     user = await db.users.get_user_with_hashed_password(email=data.email)
 
@@ -71,9 +72,6 @@ async def logout(response: Response):
 
 
 @router.get("/me")
-async def me(
-        user_id: UserIdDep,
-        db: DBDep
-):
+async def me(user_id: UserIdDep, db: DBDep):
     user = await db.users.get_one_or_none(id=user_id)
     return user

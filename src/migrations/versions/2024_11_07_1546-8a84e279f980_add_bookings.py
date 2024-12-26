@@ -1,4 +1,4 @@
-"""Add bookings 
+"""Add bookings
 
 Revision ID: 8a84e279f980
 Revises: 9395ced823cd

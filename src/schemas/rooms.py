@@ -22,8 +22,10 @@ class RoomAdd(BaseModel):
 class Room(RoomAdd):
     id: int
 
+
 class RoomWithRels(Room):
     facilities: list[Facility]
+
 
 class RoomPatchRequest(BaseModel):
     title: str | None = Field(None)
