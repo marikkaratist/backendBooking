@@ -1,9 +1,9 @@
+# ruff: noqa: E402, F403
 import json
 import pytest
 from httpx import AsyncClient
 from unittest import mock
 
-from sqlalchemy import True_
 
 mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
 

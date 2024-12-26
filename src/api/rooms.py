@@ -87,7 +87,7 @@ async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomAdd
 
 
 @router.patch("/{hotel_id}/rooms/{room_id}")
-async def update_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomPatchRequest):
+async def patch_room(hotel_id: int, room_id: int, db: DBDep, room_data: RoomPatchRequest):
     _room_data_dict = room_data.model_dump(exclude_unset=True)
     _room_data = RoomPatch(hotel_id=hotel_id, **_room_data_dict)
     await db.rooms.edit(_room_data, exclude_unset=True, id=room_id)
