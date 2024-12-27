@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from sqlalchemy import select, insert, update, delete
+from sqlalchemy.exc import NoResultFound, IntegrityError
+from asyncpg.exceptions import UniqueViolationError
 
+from src.exceptions import ObjectNotFoundException, ObjectConflictException
 from src.repositories.mappers.base import DataMapper
 
 
@@ -27,11 +30,26 @@ class BaseRepository:
             return None
         return self.mapper.map_to_domain_entity(model)
 
-    async def add(self, data: BaseModel):
-        add_data_stmt = insert(self.model).values(**data.model_dump()).returning(self.model)
-        result = await self.session.execute(add_data_stmt)
-        model = result.scalars().one()
+    async def get_one(self, **filter_by) -> BaseModel:
+        query = select(self.model).filter_by(**filter_by)
+        result = await self.session.execute(query)
+        try:
+            model = result.scalar_one()
+        except NoResultFound:
+            raise ObjectNotFoundException
         return self.mapper.map_to_domain_entity(model)
+
+    async def add(self, data: BaseModel):
+        try:
+            add_data_stmt = insert(self.model).values(**data.model_dump()).returning(self.model)
+            result = await self.session.execute(add_data_stmt)
+            model = result.scalars().one()
+            return self.mapper.map_to_domain_entity(model)
+        except IntegrityError as ex:
+            if isinstance(ex.orig.__cause__, UniqueViolationError):
+                raise ObjectConflictException from ex
+            else:
+                raise ex
 
     async def add_bulk(self, data: list[BaseModel]):
         add_data_stmt = insert(self.model).values([item.model_dump() for item in data])

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException, Response
 
 from src.api.dependencies import UserIdDep, DBDep
+from src.exceptions import ObjectConflictException
 from src.schemas.users import UserAdd, UserRequestAdd
 from src.services.auth import AuthService
 
@@ -28,8 +29,8 @@ async def register(
         new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
         await db.users.add(new_user_data)
         await db.commit()
-    except:  # noqa: E722
-        raise HTTPException(status_code=400)
+    except ObjectConflictException:
+        raise HTTPException(status_code=409, detail="Пользователь с таким логином уже существует")
 
     return {"status": 200}
 
