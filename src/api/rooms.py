@@ -24,7 +24,7 @@ async def get_rooms(
         date_from,
         date_to,
     )
-    return {"status": 201, "data": rooms}
+    return {"status": 200, "data": rooms}
 
 
 @router.get("/{hotel_id}/rooms/{room_id}")
@@ -34,7 +34,7 @@ async def get_room(hotel_id: int, room_id: int, db: DBDep):
         room = await RoomService(db).get_room(hotel_id, room_id)
     except RoomNotFoundException:
         raise RoomNotFoundHTTPException
-    return {"status": 201, "data": room}
+    return {"status": 200, "data": room}
 
 
 @router.post("/{hotel_id}/rooms")

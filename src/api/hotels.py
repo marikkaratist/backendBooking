@@ -27,7 +27,7 @@ async def get_hotels(
         date_from,
         date_to,
     )
-    return {"status": 201, "data": hotels}
+    return {"status": 200, "data": hotels}
 
 @router.get("/{hotel_id}")
 @cache(expire=10)
@@ -61,7 +61,7 @@ async def create_hotel(
 @router.put("/{hotel_id}")
 async def update_hotel(hotel_id: int, hotel_data: HotelAdd, db: DBDep):
     await HotelService(db).update_hotel(hotel_id, hotel_data)
-    return {"status": 201}
+    return {"status": 204}
 
 
 @router.patch(
