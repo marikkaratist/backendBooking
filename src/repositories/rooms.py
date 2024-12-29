@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import NoResultFound
 
-from src.exceptions import ObjectNotFoundException
+from src.exceptions import RoomNotFoundException
 from src.models.rooms import RoomsORM
 from src.repositories.base import BaseRepository
 from src.repositories.mappers.mappers import RoomDataWithRelsMapper, RoomDataMapper
@@ -28,7 +28,7 @@ class RoomsRepository(BaseRepository):
             RoomDataWithRelsMapper.map_to_domain_entity(model) for model in result.scalars().all()
         ]
 
-    async def get_one_or_none_with_rels(self, **filter_by):
+    async def get_one_with_rels(self, **filter_by):
         query = (
             select(self.model).options(selectinload(self.model.facilities)).filter_by(**filter_by)
         )
@@ -36,6 +36,6 @@ class RoomsRepository(BaseRepository):
         try:
             model = result.scalar_one()
         except NoResultFound:
-            raise ObjectNotFoundException
+            raise RoomNotFoundException
 
         return RoomDataWithRelsMapper.map_to_domain_entity(model)
