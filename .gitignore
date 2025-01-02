@@ -4,4 +4,5 @@ test_main.http
 __pycache__/
 .idea/
 .env
+.env-test
 celerybeat-schedule
