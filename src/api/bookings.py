@@ -43,4 +43,4 @@ async def create_booking(
     except AllRoomsAreBookedException:
         raise AllRoomsAreBookedHTTPException
 
-    return {"status": 201, "data": booking}
+    return {"status": "OK", "data": booking}

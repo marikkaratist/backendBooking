@@ -69,7 +69,7 @@ async def create_room(
         room = await RoomService(db).add_room(hotel_id, room_data)
     except HotelNotFoundException:
         raise HotelNotFoundHTTPException
-    return {"status": 201, "data": room}
+    return {"status": "OK", "data": room}
 
 
 @router.put("/{hotel_id}/rooms/{room_id}")

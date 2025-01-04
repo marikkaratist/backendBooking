@@ -26,4 +26,4 @@ async def add_facility(
 ):
     facility = await FacilityService(db).add_facility(facility_data)
 
-    return {"status": 201, "data": facility}
+    return {"status": "OK", "data": facility}
