@@ -30,7 +30,7 @@ async def get_hotels(
     return {"status": 200, "data": hotels}
 
 
-@router.get("/{hotel_id}")
+@router.get("/{hotel_id}", summary="Получение отеля по id")
 @cache(expire=10)
 async def get_hotel(hotel_id: int, db: DBDep):
     try:
