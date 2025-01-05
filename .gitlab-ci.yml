@@ -23,12 +23,10 @@ Format:
   script:
     - docker run --rm --network myNetwork booking-api-image ruff format --check
 
-
 Migrations:
   stage: migrations
   script:
     - docker run --rm --network myNetwork booking-api-image alembic upgrade head
-
 
 Test:
   stage: test
