@@ -6,7 +6,11 @@ from pydantic import BaseModel
 from src.database import async_session_maker
 from src.services.auth import AuthService
 from src.utils.db_manager import DBManager
-from src.exceptions import IncorrectTokenException, IncorrectTokenHTTPException, NoAccessTokenHTTPException
+from src.exceptions import (
+    IncorrectTokenException,
+    IncorrectTokenHTTPException,
+    NoAccessTokenHTTPException,
+)
 
 
 class PaginationParams(BaseModel):

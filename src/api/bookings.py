@@ -23,20 +23,20 @@ async def get_me(db: DBDep, user_id: UserIdDep):
 
 @router.post("")
 async def create_booking(
-        user_id: UserIdDep,
-        db: DBDep,
-        booking_data: BookingAddRequest = Body(
-            openapi_examples={
-                "1": {
-                    "summary": "Бронирование №1",
-                    "value": {"room_id": 1, "date_from": "2023-12-10", "date_to": "2023-12-15"},
-                },
-                "2": {
-                    "summary": "Бронирование №2",
-                    "value": {"room_id": 2, "date_from": "2023-12-22", "date_to": "2023-12-28"},
-                },
-            }
-        ),
+    user_id: UserIdDep,
+    db: DBDep,
+    booking_data: BookingAddRequest = Body(
+        openapi_examples={
+            "1": {
+                "summary": "Бронирование №1",
+                "value": {"room_id": 1, "date_from": "2023-12-10", "date_to": "2023-12-15"},
+            },
+            "2": {
+                "summary": "Бронирование №2",
+                "value": {"room_id": 2, "date_from": "2023-12-22", "date_to": "2023-12-28"},
+            },
+        }
+    ),
 ):
     try:
         booking = await BookingService(db).create_booking(user_id, booking_data)

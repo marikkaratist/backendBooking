@@ -1,19 +1,23 @@
 from datetime import date
 
 from src.api.dependencies import PaginationDep
-from src.exceptions import check_date_to_after_date_from, ObjectNotFoundException, HotelNotFoundException
+from src.exceptions import (
+    check_date_to_after_date_from,
+    ObjectNotFoundException,
+    HotelNotFoundException,
+)
 from src.schemas.hotels import HotelAdd, HotelPatch, Hotel
 from src.services.base import BaseService
 
 
 class HotelService(BaseService):
     async def get_filtered_by_time(
-            self,
-            pagination: PaginationDep,
-            location: str | None,
-            title: str | None,
-            date_from: date,
-            date_to: date,
+        self,
+        pagination: PaginationDep,
+        location: str | None,
+        title: str | None,
+        date_from: date,
+        date_to: date,
     ):
         check_date_to_after_date_from(date_from, date_to)
         per_page = pagination.per_page or 5

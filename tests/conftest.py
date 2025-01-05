@@ -65,22 +65,11 @@ async def ac() -> AsyncClient:
 
 @pytest.fixture(scope="session", autouse=True)
 async def register_user(setup_database, ac):
-    await ac.post(
-        "/auth/register",
-        json={
-            "email": "kot@pes.com",
-            "password": "12345"
-        }
-    )
+    await ac.post("/auth/register", json={"email": "kot@pes.com", "password": "12345"})
+
 
 @pytest.fixture(scope="session")
 async def authenticated_ac(register_user, ac):
-    await ac.post(
-        "/auth/login",
-        json={
-            "email": "kot@pes.com",
-            "password": "12345"
-        }
-    )
+    await ac.post("/auth/login", json={"email": "kot@pes.com", "password": "12345"})
     assert ac.cookies["access_token"]
     yield ac

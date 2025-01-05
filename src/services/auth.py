@@ -4,8 +4,13 @@ from passlib.context import CryptContext
 import jwt
 
 from src.config import settings
-from src.exceptions import IncorrectTokenException, UserAlreadyExistsException, ObjectConflictException, \
-    EmailNotRegisteredException, IncorrectPasswordException
+from src.exceptions import (
+    IncorrectTokenException,
+    UserAlreadyExistsException,
+    ObjectConflictException,
+    EmailNotRegisteredException,
+    IncorrectPasswordException,
+)
 from src.schemas.users import UserRequestAdd, UserAdd
 from src.services.base import BaseService
 
