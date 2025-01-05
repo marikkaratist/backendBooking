@@ -11,22 +11,18 @@ services:
   booking_celery_worker_service:
     container_name:
       "booking_celery_worker"
-    build:
-      context: .
+    image: booking-api-image:latest
     networks:
       - myNetwork
-    image: booking-api-image:latest
     command:
       "celery --app=src.tasks.celery_app:celery_instance worker -l INFO"
 
   booking_celery_beat_service:
     container_name:
       "booking_celery_beat"
-    build:
-      context: .
+    image: booking-api-image:latest
     networks:
       - myNetwork
-    image: booking-api-image:latest
     command:
       "celery --app=src.tasks.celery_app:celery_instance beat -l INFO"
 
