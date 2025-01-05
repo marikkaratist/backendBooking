@@ -69,6 +69,6 @@ async def logout(response: Response):
     return {"status": "OK"}
 
 
-@router.get("/me")
+@router.get("/me", summary="🧑‍💻 Мой профиль")
 async def me(user_id: UserIdDep, db: DBDep):
     return await AuthService(db).get_one_or_none_user(user_id)
