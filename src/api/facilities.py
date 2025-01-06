@@ -8,7 +8,7 @@ from src.services.facilities import FacilityService
 router = APIRouter(prefix="/facilities", tags=["Удобства"])
 
 
-@router.get("")
+@router.get("", summary="Получение всех удобств")
 @cache(expire=10)
 async def get_facilities(db: DBDep):
     return await db.facilities.get_all()
