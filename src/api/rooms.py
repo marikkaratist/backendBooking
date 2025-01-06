@@ -42,7 +42,7 @@ async def get_room(hotel_id: int, room_id: int, db: DBDep):
     return {"status": 200, "data": room}
 
 
-@router.post("/{hotel_id}/rooms")
+@router.post("/{hotel_id}/rooms", summary="Создание номера")
 async def create_room(
     hotel_id: int,
     db: DBDep,
