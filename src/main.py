@@ -48,6 +48,7 @@ async def custom_swagger_ui_html():
         swagger_css_url="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css",
     )
 
+
 app.add_middleware(CORSMiddleware, allow_origins=["*"])
 
 if __name__ == "__main__":
